@@ -104,56 +104,14 @@ func drawIcon() {
     markerCenter.stroke()
 }
 
-func drawLandscape(in rect: NSRect) {
-    let sky = NSBezierPath(roundedRect: rect, xRadius: 24, yRadius: 24)
-    NSGradient(colors: [color(0x192b50), color(0x467e99), color(0x9bd3cc)])?.draw(in: sky, angle: 90)
-
-    let distant = NSBezierPath()
-    distant.move(to: NSPoint(x: rect.minX, y: rect.minY + rect.height * 0.34))
-    distant.line(to: NSPoint(x: rect.minX + rect.width * 0.24, y: rect.minY + rect.height * 0.78))
-    distant.line(to: NSPoint(x: rect.minX + rect.width * 0.42, y: rect.minY + rect.height * 0.44))
-    distant.line(to: NSPoint(x: rect.minX + rect.width * 0.60, y: rect.minY + rect.height * 0.84))
-    distant.line(to: NSPoint(x: rect.maxX, y: rect.minY + rect.height * 0.30))
-    distant.line(to: NSPoint(x: rect.maxX, y: rect.minY))
-    distant.line(to: NSPoint(x: rect.minX, y: rect.minY))
-    distant.close()
-    color(0x38577a).setFill()
-    distant.fill()
-
-    let near = NSBezierPath()
-    near.move(to: NSPoint(x: rect.minX, y: rect.minY + rect.height * 0.22))
-    near.line(to: NSPoint(x: rect.minX + rect.width * 0.28, y: rect.minY + rect.height * 0.62))
-    near.line(to: NSPoint(x: rect.minX + rect.width * 0.48, y: rect.minY + rect.height * 0.20))
-    near.line(to: NSPoint(x: rect.minX + rect.width * 0.72, y: rect.minY + rect.height * 0.55))
-    near.line(to: NSPoint(x: rect.maxX, y: rect.minY + rect.height * 0.16))
-    near.line(to: NSPoint(x: rect.maxX, y: rect.minY))
-    near.line(to: NSPoint(x: rect.minX, y: rect.minY))
-    near.close()
-    color(0x223e58).setFill()
-    near.fill()
-
-    let road = NSBezierPath()
-    road.move(to: NSPoint(x: rect.minX + rect.width * 0.08, y: rect.minY + rect.height * 0.08))
-    road.curve(to: NSPoint(x: rect.minX + rect.width * 0.56, y: rect.minY + rect.height * 0.22), controlPoint1: NSPoint(x: rect.minX + rect.width * 0.29, y: rect.minY + rect.height * 0.14), controlPoint2: NSPoint(x: rect.minX + rect.width * 0.42, y: rect.minY + rect.height * 0.08))
-    road.curve(to: NSPoint(x: rect.minX + rect.width * 0.82, y: rect.minY + rect.height * 0.34), controlPoint1: NSPoint(x: rect.minX + rect.width * 0.66, y: rect.minY + rect.height * 0.38), controlPoint2: NSPoint(x: rect.minX + rect.width * 0.71, y: rect.minY + rect.height * 0.26))
-    color(0xe9e5d6).setStroke()
-    road.lineWidth = 18
-    road.lineCapStyle = .round
-    road.stroke()
-
-    let truckBody = NSBezierPath(roundedRect: NSRect(x: rect.minX + rect.width * 0.55, y: rect.minY + rect.height * 0.24, width: rect.width * 0.18, height: rect.height * 0.12), xRadius: 9, yRadius: 9)
-    color(0x3cd0c4).setFill()
-    truckBody.fill()
-    let cab = NSBezierPath(roundedRect: NSRect(x: rect.minX + rect.width * 0.73, y: rect.minY + rect.height * 0.24, width: rect.width * 0.09, height: rect.height * 0.10), xRadius: 8, yRadius: 8)
-    color(0xffbf69).setFill()
-    cab.fill()
-    for x in [rect.minX + rect.width * 0.59, rect.minX + rect.width * 0.75] {
-        let wheel = NSBezierPath(ovalIn: NSRect(x: x, y: rect.minY + rect.height * 0.19, width: 22, height: 22))
-        color(0x12233f).setFill()
-        wheel.fill()
-        color(0xdbe9ee).setStroke()
-        wheel.lineWidth = 4
-        wheel.stroke()
+func drawWaveform(in rect: NSRect, levels: [CGFloat], barWidth: CGFloat, fill: NSColor) {
+    guard !levels.isEmpty else { return }
+    let gap = max(2, (rect.width - CGFloat(levels.count) * barWidth) / CGFloat(levels.count - 1))
+    let centerY = rect.midY
+    for (index, level) in levels.enumerated() {
+        let height = max(8, rect.height * level)
+        let x = rect.minX + CGFloat(index) * (barWidth + gap)
+        roundedRect(NSRect(x: x, y: centerY - height / 2, width: barWidth, height: height), radius: barWidth / 2, fill: fill)
     }
 }
 
@@ -176,39 +134,78 @@ let banner = png(width: 1280, height: 640) {
     color(0x74e1d4, alpha: 0.14).setFill()
     badge.fill()
     text("TIGHTTAKE", x: 91, y: 528, size: 16, weight: .bold, fill: color(0xaff5ed))
-    text("Clean cuts,", x: 72, y: 414, size: 68, weight: .bold, fill: color(0xf7fbff))
-    text("made locally.", x: 72, y: 337, size: 68, weight: .bold, fill: color(0xf7fbff))
-    text("A menu-bar silence cutter for macOS.", x: 76, y: 279, size: 24, weight: .regular, fill: color(0xc4d5e6))
-    text("MLX Whisper  ·  FFmpeg  ·  Apple silicon", x: 76, y: 226, size: 18, weight: .medium, fill: color(0x82dcd4))
+    text("Cut the pauses.", x: 72, y: 414, size: 63, weight: .bold, fill: color(0xf7fbff))
+    text("Keep the words.", x: 72, y: 340, size: 63, weight: .bold, fill: color(0xf7fbff))
+    text("Speech-aware silence trimming for macOS.", x: 76, y: 281, size: 22, weight: .regular, fill: color(0xc4d5e6))
+    text("MLX Whisper  ·  FFmpeg  ·  Apple silicon", x: 76, y: 230, size: 18, weight: .medium, fill: color(0x82dcd4))
+    text("Illustrative workflow · sample timings · original preserved", x: 76, y: 186, size: 14, weight: .regular, fill: color(0xa9bdc9))
 
-    let panelRect = NSRect(x: 692, y: 55, width: 526, height: 530)
-    let panel = NSBezierPath(roundedRect: panelRect, xRadius: 30, yRadius: 30)
-    color(0x0c172b, alpha: 0.72).setFill()
+    let panelRect = NSRect(x: 650, y: 42, width: 576, height: 552)
+    let panel = NSBezierPath(roundedRect: panelRect, xRadius: 25, yRadius: 25)
+    color(0x0c172b, alpha: 0.82).setFill()
     panel.fill()
-    color(0xd4ecf1, alpha: 0.20).setStroke()
+    color(0xd4ecf1, alpha: 0.24).setStroke()
     panel.lineWidth = 2
     panel.stroke()
 
-    let screen = NSRect(x: 718, y: 246, width: 474, height: 308)
-    drawLandscape(in: screen)
+    text("VIDEO SMART CUT", x: 680, y: 554, size: 15, weight: .bold, fill: color(0xf0f6f3))
+    text("TIGHTTAKE", x: 680, y: 537, size: 10, weight: .medium, fill: color(0x91afb9))
+    roundedRect(NSRect(x: 1084, y: 540, width: 111, height: 28), radius: 14, fill: color(0x1c453f))
+    let localDot = NSBezierPath(ovalIn: NSRect(x: 1097, y: 550, width: 8, height: 8))
+    color(0x7ee1b6).setFill()
+    localDot.fill()
+    text("ON THIS MAC", x: 1112, y: 550, size: 9, weight: .bold, fill: color(0xb5e7d7))
 
-    roundedRect(NSRect(x: 740, y: 475, width: 88, height: 32), radius: 16, fill: color(0x0d2039, alpha: 0.70))
-    text("PREVIEW", x: 756, y: 485, size: 12, weight: .bold, fill: color(0xe6f5f4))
+    roundedRect(NSRect(x: 678, y: 474, width: 520, height: 52), radius: 11, fill: color(0x192d39))
+    roundedRect(NSRect(x: 692, y: 486, width: 28, height: 28), radius: 7, fill: color(0x2a4a58))
+    text("▶", x: 700, y: 494, size: 11, weight: .bold, fill: color(0x65d5c8))
+    text("Interview_take_04.mov", x: 731, y: 499, size: 13, weight: .semibold, fill: color(0xf0f6f3))
+    text("SELECTED VIDEO  ·  SOURCE LEFT UNCHANGED", x: 731, y: 483, size: 9, weight: .medium, fill: color(0x91a8b2))
+    roundedRect(NSRect(x: 1164, y: 492, width: 20, height: 20), radius: 10, fill: color(0x214b43))
+    text("✓", x: 1170, y: 496, size: 10, weight: .bold, fill: color(0x8de4be))
 
-    roundedRect(NSRect(x: 718, y: 82, width: 474, height: 135), radius: 20, fill: color(0x182943))
-    text("SPEECH TIMELINE", x: 740, y: 183, size: 12, weight: .bold, fill: color(0x96b0c6))
-    let heights: [CGFloat] = [20, 34, 51, 30, 45, 60, 29, 38, 48, 24, 0, 0, 0, 31, 48, 60, 35, 47, 26, 54, 34, 24, 43, 32]
-    for (index, height) in heights.enumerated() where height > 0 {
-        let x = 741 + CGFloat(index) * 17
-        let bar = NSBezierPath(roundedRect: NSRect(x: x, y: 126 - height / 2, width: 9, height: height), xRadius: 4, yRadius: 4)
-        (index == 10 || index == 13 ? color(0xffc36b) : color(0x62d8cd)).setFill()
-        bar.fill()
-    }
-    let cutLine = NSBezierPath()
-    cutLine.move(to: NSPoint(x: 920, y: 106))
-    cutLine.line(to: NSPoint(x: 920, y: 160))
-    color(0xffc36b).setStroke()
-    cutLine.lineWidth = 3
-    cutLine.stroke()
+    roundedRect(NSRect(x: 678, y: 314, width: 520, height: 146), radius: 12, fill: color(0x101f2a))
+    text("BEFORE  ·  SOURCE VIDEO", x: 699, y: 437, size: 11, weight: .bold, fill: color(0xaac1c9))
+    text("06:42", x: 1125, y: 437, size: 12, weight: .bold, fill: color(0xe8f3ef))
+    roundedRect(NSRect(x: 697, y: 346, width: 482, height: 72), radius: 8, fill: color(0x0b1720))
+    roundedRect(NSRect(x: 708, y: 357, width: 120, height: 50), radius: 5, fill: color(0x163b3b))
+    roundedRect(NSRect(x: 832, y: 357, width: 42, height: 50), radius: 5, fill: color(0x44351f))
+    roundedRect(NSRect(x: 878, y: 357, width: 135, height: 50), radius: 5, fill: color(0x163b3b))
+    roundedRect(NSRect(x: 1017, y: 357, width: 38, height: 50), radius: 5, fill: color(0x44351f))
+    roundedRect(NSRect(x: 1059, y: 357, width: 108, height: 50), radius: 5, fill: color(0x163b3b))
+    drawWaveform(in: NSRect(x: 716, y: 363, width: 104, height: 38), levels: [0.32, 0.75, 0.52, 0.9, 0.42, 0.72, 1.0, 0.56, 0.34], barWidth: 5, fill: color(0x65d5c8))
+    drawWaveform(in: NSRect(x: 886, y: 363, width: 119, height: 38), levels: [0.38, 0.62, 0.96, 0.52, 0.79, 0.34, 0.7, 1.0, 0.58, 0.82], barWidth: 5, fill: color(0x65d5c8))
+    drawWaveform(in: NSRect(x: 1067, y: 363, width: 91, height: 38), levels: [0.42, 0.88, 0.6, 1.0, 0.52, 0.76, 0.36], barWidth: 5, fill: color(0x65d5c8))
+    text("1:42", x: 837, y: 377, size: 9, weight: .bold, fill: color(0xffd17d))
+    text("0:56", x: 1021, y: 377, size: 9, weight: .bold, fill: color(0xffd17d))
+    text("TEAL = SPEECH KEPT     AMBER = LONG PAUSE REMOVED", x: 699, y: 326, size: 9, weight: .medium, fill: color(0x91a8b2))
+
+    text("LOCAL SPEECH MAP", x: 699, y: 294, size: 9, weight: .bold, fill: color(0x78d9ce))
+    let transition = NSBezierPath()
+    transition.move(to: NSPoint(x: 828, y: 297))
+    transition.line(to: NSPoint(x: 1170, y: 297))
+    color(0x52707a).setStroke()
+    transition.lineWidth = 1
+    transition.stroke()
+
+    roundedRect(NSRect(x: 678, y: 158, width: 520, height: 126), radius: 12, fill: color(0x10221f))
+    text("AFTER  ·  NEW MP4", x: 699, y: 259, size: 11, weight: .bold, fill: color(0xb8e8d4))
+    text("04:04  ·  2 PAUSES CUT", x: 1038, y: 259, size: 10, weight: .bold, fill: color(0x8de4be))
+    roundedRect(NSRect(x: 697, y: 184, width: 482, height: 58), radius: 8, fill: color(0x0b1b18))
+    roundedRect(NSRect(x: 708, y: 193, width: 146, height: 40), radius: 5, fill: color(0x16463f))
+    roundedRect(NSRect(x: 858, y: 193, width: 4, height: 40), radius: 2, fill: color(0xa1cfc0, alpha: 0.62))
+    roundedRect(NSRect(x: 866, y: 193, width: 146, height: 40), radius: 5, fill: color(0x16463f))
+    roundedRect(NSRect(x: 1016, y: 193, width: 4, height: 40), radius: 2, fill: color(0xa1cfc0, alpha: 0.62))
+    roundedRect(NSRect(x: 1024, y: 193, width: 143, height: 40), radius: 5, fill: color(0x16463f))
+    drawWaveform(in: NSRect(x: 715, y: 197, width: 131, height: 32), levels: [0.34, 0.72, 0.46, 0.92, 0.54, 0.78, 1.0, 0.52, 0.86, 0.38, 0.68], barWidth: 5, fill: color(0x7ee1b6))
+    drawWaveform(in: NSRect(x: 873, y: 197, width: 132, height: 32), levels: [0.44, 0.84, 0.55, 1.0, 0.42, 0.68, 0.92, 0.48, 0.78, 0.34, 0.64], barWidth: 5, fill: color(0x7ee1b6))
+    drawWaveform(in: NSRect(x: 1031, y: 197, width: 128, height: 32), levels: [0.38, 0.8, 0.56, 0.94, 0.46, 0.74, 1.0, 0.56, 0.82, 0.34, 0.62], barWidth: 5, fill: color(0x7ee1b6))
+
+    roundedRect(NSRect(x: 678, y: 82, width: 520, height: 57), radius: 10, fill: color(0x192d39))
+    roundedRect(NSRect(x: 692, y: 99, width: 22, height: 22), radius: 11, fill: color(0x214b43))
+    text("✓", x: 699, y: 105, size: 10, weight: .bold, fill: color(0x8de4be))
+    text("Interview_take_04_TightTake.mp4", x: 724, y: 109, size: 12, weight: .semibold, fill: color(0xf0f6f3))
+    text("NEW FILE  ·  ORIGINAL VIDEO PRESERVED", x: 724, y: 92, size: 9, weight: .medium, fill: color(0x91a8b2))
+    text("MP4", x: 1155, y: 105, size: 10, weight: .bold, fill: color(0x9fc2c5))
 }
 try save(banner, as: "repository-banner.png")

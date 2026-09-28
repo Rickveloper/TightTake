@@ -1,6 +1,6 @@
 # TightTake
 
-![TightTake — local-first silence editing for macOS](assets/repository-banner.png)
+![Illustrative TightTake workflow: long pauses are removed between speech sections in a shorter MP4, with the original video untouched](assets/repository-banner.png)
 
 TightTake is the open-source project for a menu-bar macOS silence cutter. The included app currently appears in macOS as **Video Smart Cut**. It trims long pauses while keeping a little breathing room around speech and creates a new MP4 instead of modifying the input.
 
