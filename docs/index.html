@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#102b3b">
+    <meta name="description" content="TightTake is a local-first macOS menu-bar app that trims long silences from video with MLX Whisper and FFmpeg.">
+    <meta property="og:title" content="TightTake — tighter cuts, locally">
+    <meta property="og:description" content="Trim long pauses from video on your Mac. Your footage stays yours.">
+    <title>TightTake — Tighter cuts, locally</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #102b3b;
+        --ink-soft: #355263;
+        --paper: #f6f5ef;
+        --paper-deep: #e9ece5;
+        --teal: #50c7c1;
+        --teal-deep: #0f777c;
+        --amber: #ffc665;
+        --line: #cfd8d2;
+        --white: #fffefa;
+        --shell: 1160px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body { margin: 0; background: var(--paper); color: var(--ink); line-height: 1.55; }
+      a { color: inherit; }
+      a:focus-visible { outline: 3px solid var(--amber); outline-offset: 4px; border-radius: 3px; }
+      img { display: block; max-width: 100%; }
+      .shell { width: min(var(--shell), calc(100% - 48px)); margin-inline: auto; }
+      .skip-link { position: absolute; top: 8px; left: 8px; z-index: 5; padding: 10px 14px; background: var(--white); transform: translateY(-160%); }
+      .skip-link:focus { transform: translateY(0); }
+
+      .masthead { background: var(--ink); color: var(--white); }
+      .topbar { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+      .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; font-weight: 800; letter-spacing: .08em; }
+      .brand-mark { width: 33px; height: 33px; display: grid; place-items: center; border-radius: 9px; background: var(--teal); color: var(--ink); }
+      .brand-mark svg { width: 21px; height: 21px; }
+      .nav-links { display: flex; align-items: center; gap: 30px; }
+      .nav-links a { color: #dce8e9; text-decoration: none; font-size: 14px; font-weight: 650; }
+      .nav-links a:hover { color: var(--teal); }
+      .nav-download { border: 1px solid #74909a; padding: 9px 14px; border-radius: 7px; }
+
+      .hero { background: var(--ink); color: var(--white); padding: 64px 0 74px; }
+      .hero-grid { display: grid; grid-template-columns: .88fr 1.12fr; align-items: center; gap: 54px; }
+      .eyebrow { display: inline-flex; align-items: center; gap: 9px; margin: 0 0 17px; color: var(--teal); font-size: 12px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+      .eyebrow::before { width: 22px; height: 2px; content: ""; background: var(--amber); }
+      h1, h2, h3, p { margin-top: 0; }
+      h1 { max-width: 570px; margin-bottom: 21px; font-size: 62px; line-height: 1.02; letter-spacing: -.045em; }
+      h1 span { color: var(--teal); }
+      .hero-lead { max-width: 510px; margin-bottom: 27px; color: #d0dfe1; font-size: 19px; line-height: 1.55; }
+      .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+      .button { min-height: 49px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 18px; border: 1px solid transparent; border-radius: 7px; text-decoration: none; font-size: 14px; font-weight: 800; transition: transform 160ms ease, background-color 160ms ease; }
+      .button:hover { transform: translateY(-2px); }
+      .button-primary { background: var(--amber); color: var(--ink); }
+      .button-primary:hover { background: #ffd48b; }
+      .button-quiet { border-color: #718995; color: var(--white); }
+      .button-quiet:hover { background: #1b3d4d; }
+      .button svg { width: 17px; height: 17px; }
+      .release-meta { margin: 17px 0 0; color: #b3c7ce; font-size: 13px; }
+      .app-name-note { margin: 9px 0 0; color: #a7bbc2; font-size: 12px; }
+      .hero-art { margin: 0; }
+      .hero-art img { width: 100%; border: 1px solid #456371; border-radius: 14px; box-shadow: 0 24px 55px #07192380; }
+      .hero-art figcaption { margin-top: 10px; color: #a7bbc2; font-size: 12px; text-align: right; }
+
+      .trust-line { background: var(--paper-deep); border-bottom: 1px solid var(--line); }
+      .trust-items { min-height: 70px; display: flex; align-items: center; justify-content: space-between; gap: 22px; color: var(--ink-soft); font-size: 13px; font-weight: 700; }
+      .trust-items span { display: inline-flex; align-items: center; gap: 8px; }
+      .trust-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal-deep); }
+
+      .section { padding: 88px 0; }
+      .section-heading { max-width: 690px; margin-bottom: 42px; }
+      .section-kicker { margin-bottom: 12px; color: var(--teal-deep); font-size: 12px; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; }
+      h2 { margin-bottom: 13px; font-size: 40px; line-height: 1.12; letter-spacing: -.035em; }
+      .section-heading > p:last-child { margin-bottom: 0; color: var(--ink-soft); font-size: 17px; }
+      .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+      .feature { padding-top: 19px; border-top: 2px solid var(--ink); }
+      .feature-number { color: var(--teal-deep); font-size: 12px; font-weight: 850; letter-spacing: .1em; }
+      .feature h3 { margin: 15px 0 8px; font-size: 20px; }
+      .feature p { max-width: 330px; margin-bottom: 0; color: var(--ink-soft); font-size: 15px; }
+
+      .walkthrough { background: #e9ece5; }
+      .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; counter-reset: steps; }
+      .step { position: relative; padding: 24px 23px 22px; background: var(--white); border: 1px solid var(--line); border-radius: 9px; counter-increment: steps; }
+      .step::before { content: "0" counter(steps); display: block; margin-bottom: 24px; color: var(--teal-deep); font-size: 13px; font-weight: 850; letter-spacing: .1em; }
+      .step h3 { margin-bottom: 8px; font-size: 18px; }
+      .step p { margin-bottom: 0; color: var(--ink-soft); font-size: 14px; }
+      .requirements { display: grid; grid-template-columns: .8fr 1.2fr; align-items: start; gap: 40px; margin-top: 43px; padding-top: 30px; border-top: 1px solid #c2cec6; }
+      .requirements h3 { margin-bottom: 9px; font-size: 17px; }
+      .requirements p { margin-bottom: 0; color: var(--ink-soft); font-size: 14px; }
+      .requirements pre { overflow-x: auto; margin: 0; padding: 18px 20px; border-radius: 8px; background: var(--ink); color: #d9f3ef; font: 14px/1.8 ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+      .download { padding: 72px 0; background: #dcefea; border-top: 1px solid #c7ddd5; border-bottom: 1px solid #c7ddd5; }
+      .download-grid { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 32px; }
+      .download h2 { margin-bottom: 11px; font-size: 36px; }
+      .download-copy { max-width: 700px; margin-bottom: 0; color: var(--ink-soft); }
+      .download-actions { display: flex; flex-direction: column; align-items: stretch; gap: 9px; }
+      .download .button-primary { background: var(--ink); color: var(--white); }
+      .download .button-primary:hover { background: #214557; }
+      .release-link { color: var(--teal-deep); font-size: 13px; font-weight: 750; text-align: center; }
+      .security-note { margin: 27px 0 0; padding-top: 19px; border-top: 1px solid #bdd4cd; color: var(--ink-soft); font-size: 12px; }
+      .security-note a { color: var(--teal-deep); font-weight: 700; }
+
+      .footer { padding: 27px 0; background: var(--ink); color: #c1d0d4; }
+      .footer-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+      .footer p { margin: 0; font-size: 12px; }
+      .footer-links { display: flex; flex-wrap: wrap; gap: 20px; }
+      .footer-links a { color: #e2efee; font-size: 12px; text-decoration: none; }
+      .footer-links a:hover { color: var(--teal); }
+
+      @media (max-width: 920px) {
+        .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+        .hero-copy { max-width: 720px; }
+        .hero-art { max-width: 740px; }
+        .hero-art figcaption { text-align: left; }
+        .requirements { grid-template-columns: 1fr; gap: 18px; }
+      }
+      @media (max-width: 640px) {
+        .shell { width: min(var(--shell), calc(100% - 34px)); }
+        .topbar { min-height: 68px; gap: 14px; }
+        .nav-links { gap: 14px; }
+        .nav-links a:not(.nav-download) { display: none; }
+        .nav-download { padding: 8px 10px; font-size: 12px !important; }
+        .hero { padding: 50px 0 56px; }
+        h1 { font-size: 43px; }
+        .hero-lead { font-size: 17px; }
+        .hero-art img { border-radius: 9px; }
+        .trust-items { min-height: 0; justify-content: flex-start; flex-wrap: wrap; padding-block: 18px; gap: 10px 20px; }
+        .section { padding: 66px 0; }
+        h2 { font-size: 32px; }
+        .feature-grid, .steps { grid-template-columns: 1fr; gap: 22px; }
+        .feature { padding-top: 15px; }
+        .step { padding: 19px; }
+        .step::before { margin-bottom: 16px; }
+        .download { padding: 58px 0; }
+        .download-grid { grid-template-columns: 1fr; gap: 24px; }
+        .download h2 { font-size: 31px; }
+        .download-actions { align-items: flex-start; }
+        .release-link { text-align: left; }
+        .footer-row { align-items: flex-start; flex-direction: column; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after { transition-duration: .01ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="masthead">
+      <div class="shell topbar">
+        <a class="brand" href="#top" aria-label="TightTake home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 13h3l2-6 4 12 3-9 2 3h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span>TIGHTTAKE</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#features">Why TightTake</a>
+          <a href="#how">How it works</a>
+          <a class="nav-download" href="https://github.com/Rickveloper/TightTake/releases/latest/download/TightTake-macOS-arm64.zip">Download v1.3.5</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="shell hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">A local-first video tool</p>
+            <h1>Trim the pauses.<br><span>Keep the point.</span></h1>
+            <p class="hero-lead">TightTake finds long silences and makes a tighter cut—right on your Mac, with your original video left alone.</p>
+            <div class="actions">
+              <a class="button button-primary" href="https://github.com/Rickveloper/TightTake/releases/latest/download/TightTake-macOS-arm64.zip">
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2.5v10m0 0 3.5-3.5M10 12.5 6.5 9M3 14.5v2h14v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Download for Mac
+              </a>
+              <a class="button button-quiet" href="https://github.com/Rickveloper/TightTake/releases/tag/v1.3.5">Release notes</a>
+            </div>
+            <p class="release-meta">v1.3.5 &nbsp;·&nbsp; Apple silicon &nbsp;·&nbsp; macOS 14+</p>
+            <p class="app-name-note">The downloaded app currently appears in macOS as Video Smart Cut.</p>
+          </div>
+          <figure class="hero-art">
+            <img src="media/repository-banner.png" alt="TightTake illustration: a truck crosses a mountain road beside a speech timeline">
+            <figcaption>Speech-aware cuts, made locally.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <div class="trust-line" aria-label="Product highlights">
+        <div class="shell trust-items">
+          <span><i class="trust-dot" aria-hidden="true"></i>Runs on Apple silicon</span>
+          <span><i class="trust-dot" aria-hidden="true"></i>Your video stays on your Mac</span>
+          <span><i class="trust-dot" aria-hidden="true"></i>MIT-licensed source</span>
+        </div>
+      </div>
+
+      <section class="section" id="features">
+        <div class="shell">
+          <div class="section-heading">
+            <p class="section-kicker">Less dead air, more flow</p>
+            <h2>A tighter edit without the tedious scrubbing.</h2>
+            <p>Let local speech recognition find the words. TightTake keeps the useful pauses around them and renders a fresh file with FFmpeg.</p>
+          </div>
+          <div class="feature-grid">
+            <article class="feature">
+              <span class="feature-number">01 / LOCAL</span>
+              <h3>Your footage stays yours</h3>
+              <p>Transcription and editing run on your Mac. The app does not upload your video or transcript; MLX Whisper may download its model the first time you use it.</p>
+            </article>
+            <article class="feature">
+              <span class="feature-number">02 / NATURAL</span>
+              <h3>Keep room around speech</h3>
+              <p>Word timestamps preserve a little breathing room, helping the final cut sound less abrupt than a simple silence gate.</p>
+            </article>
+            <article class="feature">
+              <span class="feature-number">03 / SAFE</span>
+              <h3>Always make a new file</h3>
+              <p>Choose the output name and folder. TightTake creates a new MP4 instead of replacing your original video.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section walkthrough" id="how">
+        <div class="shell">
+          <div class="section-heading">
+            <p class="section-kicker">A simple workflow</p>
+            <h2>From long recording to tighter take.</h2>
+            <p>Choose a video, let the tools do the careful work, then save a separate edit.</p>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <h3>Drop in a video</h3>
+              <p>Open the menu-bar popover and select a clip, or drag an MP4, MOV, M4V, or MKV into it.</p>
+            </article>
+            <article class="step">
+              <h3>Find the pauses</h3>
+              <p>MLX Whisper creates local word timestamps; follow transcription, analysis, and render progress as it runs.</p>
+            </article>
+            <article class="step">
+              <h3>Save a fresh cut</h3>
+              <p>Set the output name and folder, then get a new MP4 while your source stays untouched.</p>
+            </article>
+          </div>
+          <div class="requirements">
+            <div>
+              <h3>What you need</h3>
+              <p>An Apple silicon Mac running macOS 14 or later, plus FFmpeg and MLX Whisper. The Whisper model is downloaded on first use.</p>
+            </div>
+            <pre><code>brew install ffmpeg pipx
+pipx install mlx-whisper</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="download" id="download">
+        <div class="shell">
+          <div class="download-grid">
+            <div>
+              <p class="section-kicker">Your next tighter take</p>
+              <h2>Try TightTake on your Mac.</h2>
+              <p class="download-copy">Get v1.3.5 for Apple silicon, or inspect the source and full release notes first.</p>
+            </div>
+            <div class="download-actions">
+              <a class="button button-primary" href="https://github.com/Rickveloper/TightTake/releases/latest/download/TightTake-macOS-arm64.zip">Download the macOS ZIP</a>
+              <a class="release-link" href="https://github.com/Rickveloper/TightTake/releases/tag/v1.3.5">View release notes and source</a>
+            </div>
+          </div>
+          <p class="security-note"><strong>First-release note:</strong> This app is ad-hoc signed and not notarized, so macOS may show a warning or block its first launch. Do not disable Gatekeeper. <a href="https://github.com/Rickveloper/TightTake">Review the source on GitHub</a> and continue only if you trust the build.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="shell footer-row">
+        <p>© 2026 TightTake contributors · MIT License</p>
+        <nav class="footer-links" aria-label="Project links">
+          <a href="https://github.com/Rickveloper/TightTake">Source</a>
+          <a href="https://github.com/Rickveloper/TightTake/blob/main/docs/PRIVACY.md">Privacy</a>
+          <a href="https://github.com/Rickveloper/TightTake/blob/main/CONTRIBUTING.md">Contribute</a>
+          <a href="https://github.com/Rickveloper/TightTake/releases/tag/v1.3.5">Release notes</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
