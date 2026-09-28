@@ -4,6 +4,18 @@
 
 TightTake is the open-source project for a menu-bar macOS silence cutter. The included app currently appears in macOS as **Video Smart Cut**. It trims long pauses while keeping a little breathing room around speech and creates a new MP4 instead of modifying the input.
 
+## Download
+
+[**Download TightTake v1.3.5 for Apple silicon (ZIP)**](https://github.com/Rickveloper/TightTake/releases/latest/download/TightTake-macOS-arm64.zip)
+
+Requires macOS 14 or later. The app appears in macOS as **Video Smart Cut**. This initial download is ad-hoc signed and not notarized, so macOS may show a security warning or block its first launch. The release notes include the build and signing details.
+
+## Quick demo
+
+1. Click the app's menu-bar icon, then choose a video or drag one into the popover.
+2. Start the cut and follow transcription, silence analysis, and render progress.
+3. Choose an output name and folder; TightTake creates a new MP4 and leaves the source video unchanged.
+
 The app runs on Apple silicon Macs. It uses [MLX Whisper](https://github.com/ml-explore/mlx-examples/tree/main/whisper) for local word timestamps and FFmpeg for the final render.
 
 ## What it does
@@ -43,7 +55,7 @@ cd tighttake
 open "build/Video Smart Cut.app"
 ```
 
-The build script compiles the Swift source into a standard `.app` bundle and applies an ad-hoc signature for local development. It does not produce an Apple Developer ID signature or notarization. There is no prebuilt installer in this source repository.
+The build script compiles the Swift source into a standard `.app` bundle and applies an ad-hoc signature for local development. It does not produce an Apple Developer ID signature or notarization. For the prebuilt Apple silicon download, use the link above.
 
 To regenerate the original project artwork and app icon on a Mac, run `./scripts/package-assets.sh`.
 
@@ -59,4 +71,4 @@ This project is distributed under the MIT License. Third-party tools and model f
 
 ## Current validation
 
-The included Swift source has been type-checked on Apple silicon with the macOS SDK. A clean build can be produced with the script above. This initial public source publication has not been independently tested on a clean Mac, and the app is not notarized; review the source and dependency requirements before using it with important footage.
+The v1.3.5 source builds and its app archive and embedded signature are checked on Apple silicon. It has not been independently tested on a clean Mac, and it is not notarized. Review the source and dependency requirements before using it with important footage.
