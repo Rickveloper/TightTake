@@ -66,8 +66,83 @@
       .button svg { width: 17px; height: 17px; }
       .release-meta { margin: 17px 0 0; color: #b3c7ce; font-size: 13px; }
       .app-name-note { margin: 9px 0 0; color: #a7bbc2; font-size: 12px; }
-      .hero-art { margin: 0; }
-      .hero-art img { width: 100%; border: 1px solid #456371; border-radius: 14px; box-shadow: 0 24px 55px #07192380; }
+      .hero-art { min-width: 0; margin: 0; }
+      .demo-screen { position: relative; display: grid; width: 100%; min-width: 0; place-items: center; overflow: hidden; min-height: 360px; aspect-ratio: 1.72; padding: 24px; border: 1px solid #456371; border-radius: 14px; background: radial-gradient(circle at 18% 84%, #285861 0, transparent 34%), linear-gradient(135deg, #172e4e, #0d555d); box-shadow: 0 24px 55px #07192380; color: #eaf3f2; isolation: isolate; }
+      .demo-screen::after { position: absolute; inset: 0; z-index: -1; content: ""; background: linear-gradient(115deg, transparent 28%, #ffffff08 55%, transparent 80%); }
+      .demo-menubar { position: absolute; inset: 0 0 auto; height: 35px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid #ffffff18; background: #091824bd; color: #d7e2e4; font-size: 10px; }
+      .demo-menubar-brand, .demo-menubar-tools, .demo-menu-icon { display: inline-flex; align-items: center; }
+      .demo-menubar-brand { gap: 7px; font-weight: 750; }
+      .demo-menu-icon { width: 17px; height: 17px; justify-content: center; border-radius: 5px; background: var(--teal); color: var(--ink); }
+      .demo-menu-icon svg { width: 12px; height: 12px; }
+      .demo-menubar-tools { gap: 13px; color: #c6d3d7; }
+      .demo-popover { position: relative; width: min(446px, 92%); margin: 20px 0 0 auto; padding: 11px; border: 1px solid #536d79; border-radius: 12px; background: linear-gradient(145deg, #142532, #0e1b25); box-shadow: 0 18px 40px #0719238c; }
+      .demo-popover::before { position: absolute; top: -5px; right: 26px; width: 9px; height: 9px; content: ""; transform: rotate(45deg); border-top: 1px solid #536d79; border-left: 1px solid #536d79; background: #142532; }
+      .demo-popover-header { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
+      .demo-app-mark { width: 28px; height: 28px; display: grid; flex: 0 0 auto; place-items: center; border-radius: 8px; background: var(--teal); color: var(--ink); }
+      .demo-app-mark svg { width: 19px; height: 19px; }
+      .demo-app-title { display: flex; flex-direction: column; gap: 1px; line-height: 1.2; }
+      .demo-app-title strong { font-size: 12px; }
+      .demo-app-title span { color: #9db1b9; font-size: 9px; }
+      .demo-local-badge { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; padding: 5px 7px; border: 1px solid #37645d; border-radius: 99px; color: #b5e7d7; font-size: 8px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+      .demo-local-dot { width: 5px; height: 5px; border-radius: 50%; background: #76e3ae; box-shadow: 0 0 8px #76e3ae80; }
+      .demo-file-row { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border: 1px solid #304753; border-radius: 8px; background: #192d39; }
+      .demo-file-icon { width: 25px; height: 25px; display: grid; flex: 0 0 auto; place-items: center; border-radius: 6px; background: #2a4a58; color: var(--teal); }
+      .demo-file-icon svg { width: 15px; height: 15px; }
+      .demo-file-name { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+      .demo-file-name strong { overflow: hidden; color: #edf4f2; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+      .demo-file-name span { color: #9db1b9; font-size: 9px; }
+      .demo-file-check { display: grid; width: 17px; height: 17px; flex: 0 0 auto; place-items: center; margin-left: auto; border-radius: 50%; background: #214b43; color: #8de4be; font-size: 10px; }
+      .demo-job { margin-top: 8px; padding: 8px; border: 1px solid #263e4b; border-radius: 8px; background: #101f29; }
+      .demo-job-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+      .demo-status-stack { min-width: 0; display: grid; }
+      .demo-status { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 6px; color: #e7f1ef; font-size: 10px; font-weight: 750; }
+      .demo-status--scan { animation: demo-scan-status 8.5s linear infinite; }
+      .demo-status--ready { opacity: 0; color: #a8ebc8; animation: demo-ready-status 8.5s linear infinite; }
+      .demo-status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 8px #ffc66580; }
+      .demo-status--ready .demo-status-dot { background: #76e3ae; box-shadow: 0 0 8px #76e3ae80; }
+      .demo-engine { flex: 0 0 auto; color: #9db1b9; font-size: 8px; }
+      .demo-landscape { width: 100%; height: 42px; display: block; margin-top: 4px; }
+      .demo-truck { animation: demo-truck-climb 8.5s cubic-bezier(.4, 0, .2, 1) infinite; transform-box: fill-box; transform-origin: center; }
+      .demo-progress-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 1px; color: #aabdc3; font-size: 8px; }
+      .demo-progress-state { grid-area: 1 / 1; }
+      .demo-progress-copy { min-width: 0; display: grid; }
+      .demo-progress-copy--done { opacity: 0; color: #a8ebc8; animation: demo-ready-status 8.5s linear infinite; }
+      .demo-progress-copy--live { animation: demo-scan-status 8.5s linear infinite; }
+      .demo-progress-number { display: grid; min-width: 29px; text-align: right; }
+      .demo-percent { grid-area: 1 / 1; }
+      .demo-percent--done { opacity: 0; animation: demo-ready-status 8.5s linear infinite; }
+      .demo-percent--live { animation: demo-scan-status 8.5s linear infinite; }
+      .demo-progress-track { height: 4px; overflow: hidden; margin-top: 5px; border-radius: 9px; background: #263c47; }
+      .demo-progress-track span { width: 7%; height: 100%; display: block; border-radius: inherit; background: linear-gradient(90deg, var(--teal-deep), var(--teal)); animation: demo-progress-fill 8.5s ease-in-out infinite; }
+      .demo-output-label { margin: 8px 0 3px; color: #8fa7af; font-size: 8px; font-weight: 800; letter-spacing: .1em; }
+      .demo-output-field { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 28px; padding: 0 9px; border: 1px solid #344c58; border-radius: 7px; background: #0d1a23; color: #dce9e7; font-size: 9px; }
+      .demo-output-field span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .demo-output-type { flex: 0 0 auto; color: #90aab1; font-size: 8px; }
+      .demo-popover-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 7px; color: #a6b8bd; font-size: 8px; }
+      .demo-safe-note { display: inline-flex; align-items: center; gap: 5px; }
+      .demo-safe-note::before { width: 5px; height: 5px; content: ""; border-radius: 50%; background: #76e3ae; }
+      .demo-save-button { padding: 6px 9px; border-radius: 6px; background: var(--amber); color: var(--ink); font-size: 8px; font-weight: 850; }
+      .hero-art figcaption { margin-top: 10px; color: #a7bbc2; font-size: 12px; text-align: right; }
+
+      @keyframes demo-scan-status {
+        0%, 67% { opacity: 1; transform: translateY(0); }
+        74%, 100% { opacity: 0; transform: translateY(-3px); }
+      }
+      @keyframes demo-ready-status {
+        0%, 68% { opacity: 0; transform: translateY(3px); }
+        75%, 94% { opacity: 1; transform: translateY(0); }
+        100% { opacity: 0; transform: translateY(-2px); }
+      }
+      @keyframes demo-progress-fill {
+        0% { width: 7%; }
+        64% { width: 78%; }
+        76%, 100% { width: 100%; }
+      }
+      @keyframes demo-truck-climb {
+        0%, 7% { transform: translate(0, 0); }
+        64% { transform: translate(176px, -13px); }
+        77%, 100% { transform: translate(176px, -13px); }
+      }
       .hero-art figcaption { margin-top: 10px; color: #a7bbc2; font-size: 12px; text-align: right; }
 
       .trust-line { background: var(--paper-deep); border-bottom: 1px solid var(--line); }
@@ -131,7 +206,15 @@
         .hero { padding: 50px 0 56px; }
         h1 { font-size: 43px; }
         .hero-lead { font-size: 17px; }
-        .hero-art img { border-radius: 9px; }
+        .demo-screen { min-height: 330px; aspect-ratio: 1; padding: 12px; border-radius: 9px; }
+        .demo-menubar { height: 30px; padding-inline: 10px; }
+        .demo-menubar-tools { gap: 7px; }
+        .demo-popover { width: 94%; margin-top: 16px; padding: 10px; }
+        .demo-popover-header { margin-bottom: 7px; }
+        .demo-job { margin-top: 6px; padding: 7px; }
+        .demo-landscape { height: 40px; }
+        .demo-popover-footer { margin-top: 6px; }
+        .demo-menubar-words { display: none; }
         .trust-items { min-height: 0; justify-content: flex-start; flex-wrap: wrap; padding-block: 18px; gap: 10px 20px; }
         .section { padding: 66px 0; }
         h2 { font-size: 32px; }
@@ -149,6 +232,11 @@
       @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto; }
         *, *::before, *::after { transition-duration: .01ms !important; }
+        .demo-screen *, .demo-screen *::before, .demo-screen *::after { animation: none !important; }
+        .demo-status--scan, .demo-progress-copy--live, .demo-percent--live { display: none; }
+        .demo-status--ready, .demo-progress-copy--done, .demo-percent--done { opacity: 1; transform: none; }
+        .demo-progress-track span { width: 100%; }
+        .demo-truck { transform: translate(176px, -13px); }
       }
     </style>
   </head>
@@ -188,8 +276,63 @@
             <p class="app-name-note">The downloaded app currently appears in macOS as Video Smart Cut.</p>
           </div>
           <figure class="hero-art">
-            <img src="media/repository-banner.png" alt="TightTake illustration: a truck crosses a mountain road beside a speech timeline">
-            <figcaption>Speech-aware cuts, made locally.</figcaption>
+            <div class="demo-screen" role="img" aria-label="Illustrative animation of TightTake's Mac menu-bar app loading a video, analyzing speech on-device, and preparing a separate output file.">
+              <div class="demo-menubar" aria-hidden="true">
+                <span class="demo-menubar-brand">
+                  <span class="demo-menu-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 13h3l2-6 4 12 3-9 2 3h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span>TightTake</span>
+                  <span class="demo-menubar-words">File&nbsp;&nbsp; Edit&nbsp;&nbsp; View</span>
+                </span>
+                <span class="demo-menubar-tools"><span>3:28 PM</span><span>⌁</span><span>◉</span><span class="demo-menu-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 13h3l2-6 4 12 3-9 2 3h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+              </div>
+              <div class="demo-popover" aria-hidden="true">
+                <div class="demo-popover-header">
+                  <span class="demo-app-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M3 13h3l2-6 4 12 3-9 2 3h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="demo-app-title"><strong>TightTake</strong><span>Speech-aware video cuts</span></span>
+                  <span class="demo-local-badge"><i class="demo-local-dot"></i>On device</span>
+                </div>
+                <div class="demo-file-row">
+                  <span class="demo-file-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="5" width="17" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m10 9 5 3-5 3V9Z" fill="currentColor"/></svg></span>
+                  <span class="demo-file-name"><strong>Camera interview.mov</strong><span>04:32 &nbsp;·&nbsp; Source stays untouched</span></span>
+                  <span class="demo-file-check">✓</span>
+                </div>
+                <div class="demo-job">
+                  <div class="demo-job-heading">
+                    <span class="demo-status-stack">
+                      <span class="demo-status demo-status--scan"><i class="demo-status-dot"></i>Processing on your Mac</span>
+                      <span class="demo-status demo-status--ready"><i class="demo-status-dot"></i>Tighter preview ready</span>
+                    </span>
+                    <span class="demo-engine">MLX Whisper + FFmpeg</span>
+                  </div>
+                  <svg class="demo-landscape" viewBox="0 0 420 88" preserveAspectRatio="xMidYMid meet">
+                    <path d="M0 66 73 19l45 35 66-47 78 58 53-39 105 58v4H0Z" fill="#315475"/>
+                    <path d="m0 72 91-37 68 41 65-53 70 40 57-30 69 35v20H0Z" fill="#24425d"/>
+                    <path d="M8 78c64 0 79-5 118-18 36-12 45-9 71-6s48-16 83-15c38 1 48-8 68-20" fill="none" stroke="#dbe6de" stroke-linecap="round" stroke-width="5"/>
+                    <g class="demo-truck">
+                      <path d="M48 38h27a5 5 0 0 1 5 5v15H43V43a5 5 0 0 1 5-5Z" fill="#50c7c1"/>
+                      <path d="M80 44h13l10 9v5H80Z" fill="#ffc665"/>
+                      <circle cx="57" cy="59" r="5" fill="#122431" stroke="#dce8e4" stroke-width="2"/>
+                      <circle cx="89" cy="59" r="5" fill="#122431" stroke="#dce8e4" stroke-width="2"/>
+                    </g>
+                  </svg>
+                  <div class="demo-progress-meta">
+                    <span class="demo-progress-copy">
+                      <span class="demo-progress-state demo-progress-copy--live">Rendering a new MP4 with FFmpeg</span>
+                      <span class="demo-progress-state demo-progress-copy--done">Preview ready &nbsp;·&nbsp; original untouched</span>
+                    </span>
+                    <span class="demo-progress-number">
+                      <span class="demo-percent demo-percent--live">78%</span>
+                      <span class="demo-percent demo-percent--done">100%</span>
+                    </span>
+                  </div>
+                  <div class="demo-progress-track"><span></span></div>
+                </div>
+                <div class="demo-output-label">EDITABLE OUTPUT NAME</div>
+                <div class="demo-output-field"><span>Camera interview - TightTake.mp4</span><span class="demo-output-type">MP4</span></div>
+                <div class="demo-popover-footer"><span class="demo-safe-note">Saved as a new file</span><span class="demo-save-button">Choose output…</span></div>
+              </div>
+            </div>
+            <figcaption>Illustrative animation: local speech scan → a tighter cut → your original stays safe.</figcaption>
           </figure>
         </div>
       </section>
